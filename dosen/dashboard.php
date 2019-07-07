@@ -26,7 +26,7 @@
           $tgl = date("Y-m-d");
           $no_urut = 0;
 
-          $sql1 = "SELECT * FROM akademik.ak_perkuliahan INNER JOIN akademik.ak_kelas ON ak_perkuliahan.idkelas = ak_kelas.idkelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_perkuliahan.tgljadwal='$tgl'";
+          $sql1 = "SELECT * FROM akademik.ak_perkuliahan INNER JOIN akademik.ak_kelas ON ak_perkuliahan.idkelas = ak_kelas.idkelas INNER JOIN akademik.dosen ON ak_kelas.idkelas = dosen.idkelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_perkuliahan.tgljadwal='$tgl' AND dosen.nik = '$nimnik'";
           // $sql = "SELECT * FROM public.ak_perkuliahan";
           $hasil1 = pg_exec($sql1);
 

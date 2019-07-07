@@ -1,22 +1,16 @@
 <?php
   //menyambungkan koneksi
   include '../config/koneksi.php';
-
   $nimnik = $_GET['nimnik'];
-
   $sql    = "SELECT * FROM akademik.user WHERE nimnik = '$nimnik'";
   $hasil  = pg_query($sql);
   while($data=pg_fetch_array($hasil))
   {
-
     session_start();
     if(isset($_SESSION['nimnik']))
-
       {
-
     if(isset($_GET['page'])) $page = $_GET['page'];
       else $page = 'index';
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -144,6 +138,10 @@
       include ('peserta-kelas.php');
       elseif ($page=='detail')
       include ('detail-pkelas.php');
+      elseif ($page=='savepict')
+      include ('storeImage.php');
+      elseif ($page=='takephoto')
+      include ('takephoto-pkelas.php');
     ?>
   </div>
 

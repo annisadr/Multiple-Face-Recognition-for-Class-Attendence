@@ -23,7 +23,7 @@
   <!-- logo di tab -->
   <link href="gambar/logo.png" rel="icon" type="image/x-icon" />
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -64,7 +64,7 @@
   
   
 
-    <script src="js/index.js"></script>
+    <script src="assets/js/index.js"></script>
 
 
 

@@ -66,16 +66,37 @@ captureButton.addEventListener("click", event => {
   });
 
   // Convert the data so it can be saved as a file
-  var picture = canvasElement.toDataURL("../upload");
-  $.ajax({
-    type: "POST",
-    url: "proses-facerec.php",
-    data: {
-      imgBase64: picture
-    }
-  }).done(function(msg) {
-    console.log('saved');
-  });
+  let picture = canvasElement.toDataURL();
+
+  // Save the file by posting it to the server
+  fetch("./api/save_image.php", {
+    method: "post",
+    body: JSON.stringify({ data: picture })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        // Create the image and give it the CSS style with a random tilt
+        //  and a z-index which gets bigger
+        //  each time that an image is added to the div
+        let newImage = createImage(
+          data.path,
+          "new image",
+          "new image",
+          width,
+          height,
+          "masked"
+        );
+        console.log(newImage);
+        let tilt = -(20 + 60 * Math.random());
+        newImage.style.transform = "rotate(" + tilt + "deg)";
+        zIndex++;
+        newImage.style.zIndex = zIndex;
+        newImages.appendChild(newImage);
+        canvasElement.classList.add("masked");
+      }
+    })
+    .catch(error => console.log(error));
 });
 
 window.addEventListener("load", event => startMedia());
