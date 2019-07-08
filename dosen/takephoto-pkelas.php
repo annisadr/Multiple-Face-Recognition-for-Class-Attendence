@@ -32,12 +32,54 @@
       type : 'POST',
       data : data,
       success : function(response) {
-        console.log(response)
+          if(response == "success") {
+              //execute training
+              training();
+              reloadserve();
+          } else {
+             alert('response failed');
+          }
+        
       },
       error : function(err) {
         alert('eror');
       }
     });
+
+    function training() {
+      $.ajax({
+        url : 'http://127.0.0.1:5000/training',
+        type: 'GET',
+        //data : "",
+        success : function(response) {
+          if(response == "success") {
+              //execute reload
+              // training();
+              reloadserve();
+          } else {
+             alert('response failed');
+          }
+        },
+        error : function(err) {
+          alert('error');
+        }  
+      });
+    }
+    
+    function reloadserve() {
+      $.ajax({
+        url : 'http://127.0.0.1:5000/restart',
+        type: 'GET',
+        //data : "",
+        success : function(response) {
+          console.log(response)
+        },
+        error : function(err) {
+          alert('error');
+        }  
+      });
+    }
+    
 
   });
 </script>
@@ -88,5 +130,3 @@
   //   });
   // });
 </script> -->
-
-</script>

@@ -97,22 +97,38 @@
             //   });
 
             // });
-
-            $('#process').click(function(e){
+      $('#process').click(function(e){
                 e.preventDefault();
                 var data = $('#val').val();
+                var idjadwal = "<?php echo $_GET['idjadwal'];?>";
                 $.ajax({
                   url : 'http://127.0.0.1:5000/facerec',
                   type : 'POST',
-                  data : {res:data},
+                  data : {res:data,jadwal:idjadwal},
                   success : function(response) {
                     console.log(response)
+                    reloadserve();
                   },
                   error : function(err) {
                     alert('eror');
                   }
                 });
             });
+
+
+      function reloadserve() {
+        $.ajax({
+          url : 'http://127.0.0.1:5000/restart',
+          type: 'GET',
+          //data : "",
+          success : function(response) {
+            console.log(response)
+          },
+          error : function(err) {
+            alert('error');
+          }  
+        });
+      }
 
     </script>
 

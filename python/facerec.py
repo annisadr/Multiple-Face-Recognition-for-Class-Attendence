@@ -93,7 +93,7 @@ recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('../trainer/trainer.yml')
 faceCascade = cv2.CascadeClassifier('../cascades/data/haarcascade_frontalface_default.xml');
 df = pd.read_csv("../StudentDetails/StudentDetails.csv")
-img = cv2.imread('../foto/2019-07-05-212755.jpg')
+img = cv2.imread('../foto/2019-07-06-153017.jpg')
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 # cam = cv2.VideoCapture(1)
@@ -106,18 +106,19 @@ faces = faceCascade.detectMultiScale(gray, 1.3,5)
 for(x,y,w,h) in faces:
 	cv2.rectangle(img, (x-20,y-20), (x+w+20,y+h+20), (0,255,0), 2)
 	Id, conf = recognizer.predict(gray[y:y+h,x:x+w])
-	if(Id < 50) :
+	if(Id) :
 		ts = time.time()      
 		date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
 		timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
 		
 		tt = str(Id)
-		
-		sql = "INSERT INTO akademik.facerec (nim, tgl, waktu) VALUES (%s,%s,%s)"
-		record = (Id,date,timeStamp)
-		cursor.execute(sql,record)
-		connection.commit()
-		count = cursor.rowcount
+		cursor.execute("SELECT * FROM akademik.facerec WHERE nim = %s AND idkelas = %s;",["2015230014","262337"])
+		if cursor.rowcount<1:
+			sql = "INSERT INTO akademik.facerec (nim, tgl, waktu, idkelas) VALUES (%s,%s,%s,%s)"
+			record = (Id,date,timeStamp,"262337")
+			cursor.execute(sql,record)
+			connection.commit()
+			count = cursor.rowcount
 
 		#insert absensi
 		# status = "H"

@@ -9,7 +9,11 @@ import sys
 import time
 from flask import Flask, jsonify, abort, request, make_response, url_for, render_template
 from flask_cors import CORS, cross_origin
+from multiprocessing import Process, Queue
 import psycopg2
+import subprocess
+
+
 
 # def assure_path_exists(path):
 #     dir = os.path.dirname(path)
@@ -24,6 +28,7 @@ connection = psycopg2.connect(user="postgres",
                               database="akademik")
 cursor = connection.cursor()
 
+some_queue = None
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -52,7 +57,7 @@ def index():
 #face recognition
 @app.route('/facerec', methods = ['POST'])
 def facerec():
-    # getidjadwal = str(request.form['idjadwal']);
+    getidjadwal = str(request.form['jadwal']);
     images_path = "dosen/"+str(request.form['res']);
     # foto = str(request.form['res']);
     # ces = "dosen/uploadtmp/190706104734.jpeg";
@@ -68,24 +73,26 @@ def facerec():
     for(x,y,w,h) in faces:
         cv2.rectangle(img, (x-20,y-20), (x+w+20,y+h+20), (0,255,0), 2)
         Id, conf = recognizer.predict(gray[y:y+h,x:x+w])
-        if(Id < 60) :
+        if(Id > 50) : #ini ambigu
             ts = time.time()      
             date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
             timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
             tt = str(Id)
-            sql = "INSERT INTO akademik.facerec (nim, tgl, waktu) VALUES (%s,%s,%s)"
-            record = (Id,date,timeStamp)
-            cursor.execute(sql,record)
-            connection.commit()
-            count = cursor.rowcount
+            cursor.execute("SELECT * FROM akademik.facerec WHERE nim = %s AND idkelas = %s;",[Id,getidjadwal])
+            if cursor.rowcount < 1:             
+                sql = "INSERT INTO akademik.facerec (nim, tgl, waktu, idkelas) VALUES (%s,%s,%s,%s)"
+                record = (Id,date,timeStamp,getidjadwal)
+                cursor.execute(sql,record)
+                connection.commit()
+                count = cursor.rowcount
 
-            #insert absensi
-            # status = "H"
-            # sqlabsen = "INSERT INTO akademik.ak_absensimhs (nim, idjadwal, statushadir) VALUES (%s,%s,%s)"
-            # recordabsen = (Id,getidjadwal,status)
-            # cursor.execute(sqlabsen,recordabsen)
-            # connection.commit()
-            # count = cursor.rowcount
+                #insert absensi
+                status = "H"
+                sqlabsen = "INSERT INTO akademik.ak_absensimhs (nim, idjadwal, statushadir) VALUES (%s,%s,%s)"
+                recordabsen = (Id,getidjadwal,status)
+                cursor.execute(sqlabsen,recordabsen)
+                connection.commit()
+                count = cursor.rowcount
         else:
             Id = 'Unknown'
             tt = str(Id)
@@ -116,7 +123,7 @@ def getpict():
             count += 1
             cv2.imwrite("dataset/User." + face_id + '.' + str(count) + ".jpg", gray[y:y+h,x:x+w])
             cv2.imshow('frame', Image_frame)
-        if cv2.waitKey(10000):
+        if cv2.waitKey(10) & 0xFF == ord('q'):
             break
         elif count>49:
             break
@@ -151,7 +158,34 @@ def training():
     faces,ids =  getImagesAndLabels('dataset')
     recognizer.train(faces, np.array(ids))
     recognizer.save('trainer/trainer.yml')
+    return "success"
+
+
+@app.route('/restart', methods = ['GET'])
+def restart():
+    try:
+        some_queue.put("something")
+        print ("Restarted successfully")
+        return "Quit"
+    except: 
+        
+        return "Failed"
+
+def start_flaskapp(queue):
+    global some_queue
+    some_queue = queue
+    app.run()
 
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
+        q = Queue()
+        p = Process(target=start_flaskapp, args=[q,])
+        p.start()
+        while True:
+            if q.empty(): 
+                time.sleep(1)
+            else:
+                break
+        p.terminate()
+        args = [sys.executable] + [sys.argv[0]]
+        subprocess.call(args)
