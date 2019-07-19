@@ -35,10 +35,23 @@
         <?php
           include "../config/koneksi.php";
           $no_urut = 0;
+          $nim = $_GET['nimnik'];
 
-          $sql = "SELECT * FROM akademik.ak_perkuliahan INNER JOIN akademik.ak_kelas ON ak_perkuliahan.idkelas = ak_kelas.idkelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_perkuliahan.tgljadwal='$tgl'";
+          // $query  = "SELECT statushadir FROM akademik.ak_absensimhs
+          //             INNER JOIN akademik.ak_perkuliahan ON ak_absensimhs.idjadwal = ak_perkuliahan.idjadwal
+          //             INNER JOIN akademik.ak_krs ON ak_perkuliahan.idkelas = ak_krs.idkelas
+          //             WHERE ak_krs.nim = '$nim'";
+          // $proses = pg_query($query);
+          // $data1   = pg_fetch_array($proses);
+
+          $sql = "SELECT tgljadwal, waktumulai, waktuselesai, namamk, namakelas, idruang, nim, idjadwal
+                  FROM akademik.ak_krs INNER JOIN akademik.ak_perkuliahan ON ak_krs.idkelas = ak_perkuliahan.idkelas
+                  INNER JOIN akademik.ak_kelas ON ak_perkuliahan.idkelas = ak_kelas.idkelas
+                  INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk
+                  WHERE ak_krs.nim = '$nim'";
           // $sql = "SELECT * FROM public.ak_perkuliahan";
           $hasil = pg_exec($sql);
+
 
           if(pg_num_rows($hasil) == 0){
             echo '<tr><td colspan="7" align="center">Tidak Ada Perkuliahan Hari Ini</td></tr>';
@@ -49,13 +62,31 @@
               $no_urut++;
               echo '<tr align="center">';
                 echo '<td><font size="2px">'.$no_urut.'</font></td>';
-                
+                echo '<td><font size="2px">'.$data['idjadwal'].'</font></td>'; //nanti ini dihapus
                 echo '<td><font size="2px">'.$data['tgljadwal'].'</font></td>';
                 echo '<td><font size="2px">'.$data['waktumulai'].'</font></td>';
                 echo '<td><font size="2px">'.$data['waktuselesai'].'</font></td>';
                 echo '<td><font size="2px">'.$data['namamk'].' (TIF '.$data['namakelas'].')</font></td>';
                 echo '<td><font size="2px">'.$data['idruang'].'</font></td>';
-                echo '<td><font size="2px"></font></td>';
+              ?>
+              <td>
+                   <font size="2px">
+                    <?php                       
+                       $querystatus = "SELECT statushadir FROM akademik.ak_absensimhs WHERE nim = '$nim'";
+                       $hasilstatus = pg_query($conn, $querystatus);
+                       $tampil      = pg_fetch_array($hasilstatus);
+
+                       if($tampil['statushadir']=='H'){
+                         echo 'Hadir';
+                       } else {
+                        echo 'Alfa';
+                       }
+                    ?>
+                   </font>
+                 </td>
+                 <?php
+                // echo '<td><font size="2px">'.$data1['statushadir'].'</font></td>';
+              
               echo '</tr>';
               $no++;
             }

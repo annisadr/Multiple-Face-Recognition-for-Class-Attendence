@@ -80,8 +80,35 @@
                 echo '<td><font size="2px">'.$data1['tgljadwal'].'</font></td>';
                 echo '<td><font size="2px">'.$data1['waktumulai'].' s.d. '.$data1['waktuselesai'].'</font></td>';
                 echo '<td><font size="2px">'.$data1['idruang'].'</font></td>';
-                
-                echo '<td><font size="2px"></font></td>';
+              ?>
+                <td>
+                  <font size="2px">
+                    <?php
+                      $tgl    = $data1['tgljadwal'];
+                      $jadwal = $data1['idjadwal'];
+                      // var_dump($jadwal);
+                      // var_dump($tgl);
+
+                      // $queryy = "SELECT * FROM akademik.facerec";
+                      // $sqll = pg_query($queryy);
+                      // $dataa = pg_fetch_array($sqll);
+
+                      // $idkelas   = $dataa['idkelas'];
+                      // var_dump($idkelas);
+                      // var_dump($tgl);
+
+                      $sum    = "SELECT COUNT(nim) as jml FROM akademik.ak_absensimhs WHERE idjadwal='$jadwal'";
+                      $query  = pg_query($sum);
+                      $result = pg_fetch_assoc($query);
+
+                      $total  = $result['jml'];
+                      // var_dump($total);
+                      echo $total;
+                    ?>
+                  </font>
+                </td>
+                <!-- echo '<td><font size="2px"></font></td>'; -->
+              <?php
                 echo '<td>
                         <a href="index.php?page=facerec&&nimnik='.$data['nimnik'].'&&idjadwal='.$data1['idjadwal'].'"><i class="fas fa-camera"></i></a>&nbsp;&nbsp;&nbsp;
                         <a href="#" style="color: green;"><i class="fas fa-clipboard-list" data-toggle="modal" data-target="#myModal"></i></a>

@@ -74,13 +74,13 @@ def facerec():
         cv2.rectangle(img, (x-20,y-20), (x+w+20,y+h+20), (0,255,0), 2)
         Id, conf = recognizer.predict(gray[y:y+h,x:x+w])
         if(Id > 50) : #ini ambigu
-            ts = time.time()      
+            ts = time.time()
             date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
             timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
             tt = str(Id)
-            cursor.execute("SELECT * FROM akademik.facerec WHERE nim = %s AND idkelas = %s;",[Id,getidjadwal])
-            if cursor.rowcount < 1:             
-                sql = "INSERT INTO akademik.facerec (nim, tgl, waktu, idkelas) VALUES (%s,%s,%s,%s)"
+            cursor.execute("SELECT * FROM akademik.facerec WHERE nim = %s AND idjadwal = %s;",[Id,getidjadwal])
+            if cursor.rowcount < 1:
+                sql = "INSERT INTO akademik.facerec (nim, tgl, waktu, idjadwal) VALUES (%s,%s,%s,%s)"
                 record = (Id,date,timeStamp,getidjadwal)
                 cursor.execute(sql,record)
                 connection.commit()
@@ -104,7 +104,6 @@ def facerec():
     cv2.destroyAllWindows()
     return "success running"
     
-
     
 #take photo mahasiswa
 @app.route('/getpict', methods = ['POST'])

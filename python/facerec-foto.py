@@ -20,10 +20,10 @@ cursor = connection.cursor()
 
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read('trainer/trainer.yml')
-faceCascade = cv2.CascadeClassifier('../cascades/data/haarcascade_frontalface_default.xml');
+recognizer.read('../trainer/trainer.yml')
+faceCascade = cv2.CascadeClassifier('../assets/cascades/data/haarcascade_frontalface_default.xml');
 # df = pd.read_csv("../StudentDetails/StudentDetails.csv") #StudentDetails/StudentDetails.csv
-img = cv2.imread('../foto/2019-07-06-153017.jpg')
+img = cv2.imread('../foto/190708085755.jpeg')
 font = cv2.FONT_HERSHEY_SIMPLEX
 col_names = ['Id','Date','Time']
 attendance = pd.DataFrame(columns = col_names)

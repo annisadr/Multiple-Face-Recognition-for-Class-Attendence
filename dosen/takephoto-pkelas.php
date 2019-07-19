@@ -15,7 +15,13 @@
 <div class="container" style="background-color: white; padding-bottom: 50px;">
   <form id="takephoto" method="POST">
     <input type="hidden" name="nim" class="form-control" readonly value="<?php echo $data1['nim'] ?>">
-    <br><br>
+    
+    <div style="padding-top: 20px">
+      <label>NIM</label>
+      <label>:</label>
+      <label><?php echo $data1['nim'];?></label>
+    </div>
+
 
     <div id="container" align="center">
       <!-- <video autoplay="true" id="videoElement" width="450px" height="300px"></video><br> -->
@@ -35,7 +41,7 @@
           if(response == "success") {
               //execute training
               training();
-              reloadserve();
+              // reloadserve();
           } else {
              alert('response failed');
           }
@@ -66,19 +72,19 @@
       });
     }
     
-    function reloadserve() {
-      $.ajax({
-        url : 'http://127.0.0.1:5000/restart',
-        type: 'GET',
-        //data : "",
-        success : function(response) {
-          console.log(response)
-        },
-        error : function(err) {
-          alert('error');
-        }  
-      });
-    }
+    // function reloadserve() {
+    //   $.ajax({
+    //     url : 'http://127.0.0.1:5000/restart',
+    //     type: 'GET',
+    //     //data : "",
+    //     success : function(response) {
+    //       console.log(response)
+    //     },
+    //     error : function(err) {
+    //       alert('error');
+    //     }  
+    //   });
+    // }
     
 
   });
