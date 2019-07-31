@@ -28,30 +28,33 @@ div.ex1 {
   height: 400px;
   overflow: scroll;
 }
-.sidenav {
-  height: 100%;
-  width: 160px;
-  position: fixed;
+.nav-link {
   
-  background-color: #e6faff;
+  background-color:  #e6eeff;
   overflow-x: hidden;
-  padding-top: 20px;
+  border-left: medium solid #ccddff;
+}
+
+.nav-item-side {
+  padding-top: 5px;
+
 }
 
 .sidenav a {
-  padding: 6px 8px 6px 16px;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 12px;
   color: black;
   display: block;
 }
 
 .sidenav a:hover {
-  color: blue;
+  color: #0099cc;
 }
 .sidenav-up {
-  background-color: #e6faff;
+  padding-left: : 20px;
+  background-color: #e6eeff;
   padding: 10px;
+  border-left: thick solid #ccddff;
 }
 .main {
   margin-left: 200px; /* Same width as the sidebar + left position in px */

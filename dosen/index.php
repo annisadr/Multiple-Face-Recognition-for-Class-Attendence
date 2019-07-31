@@ -23,7 +23,9 @@
   <link rel="stylesheet" href="../assets/bootstrap-4.3.1-dist/css/bootstrap.min.css">
   <!-- <link rel="stylesheet" href="bootstrap-4.3.1-dist/css/bootstrap.min.js"> --> <!-- ini di download // bs 4 css -->
 
-  <link rel="stylesheet" href="../assets/bootstrap-4.3.1-dist/font-awesome/css/font-awesome.min.css"> <!-- icon -->
+  <!-- icon -->
+  <link rel="stylesheet" href="../assets/bootstrap-4.3.1-dist/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
 
   <!-- jQuery library -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -61,7 +63,7 @@
   }*/
   </style>
 </head>
-<body style="background-color: #f2f2f2;">
+<body style="background-color: #fafafa;">
 
 <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #003399;">
   <div class="container">
@@ -87,7 +89,7 @@
     <p class="text-right"></p>
     <ul class="nav justify-content-end">
       <li class="nav-item">
-        <a class="nav-link" style="color: white;" href="../config/logout.php">Logout <i class="fas fa-sign-out-alt"></i></a>
+        <a class="nav-item" style="color: white;" href="../config/logout.php">Logout <i class="fas fa-sign-out-alt"></i></a>
       </li>
     </ul>
   </div>

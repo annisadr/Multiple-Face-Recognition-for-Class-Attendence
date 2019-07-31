@@ -18,10 +18,29 @@
         $hasill = pg_fetch_array($query);
     ?>
     <div class="container">
-      <div class="module-head">
-          <h5><large>Presensi Kelas</large></h5><br>
+      <?php
+        $idkelas = $_GET['idkelas'];
+        $sql4 = "SELECT * FROM akademik.ak_kelas WHERE ak_kelas.idkelas='$idkelas'";
+        $hasil4 = pg_query($sql4);
+        $data4 = pg_fetch_array($hasil4);
+      ?>
+      <div class="row">
+        <div class="col-sm-6">
+          <h4>Presensi Kelas</h4>
+        </div>
+        <div class="col-sm-6" align="right" style="font-size: 12px;">
+          <i class="fas fa-table"></i> 
+          <a href="index.php?page=index&&nimnik=<?php echo $data['nimnik'];?>" style="color: black;">Home</a>
+          <a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;</a>
+          <a href="index.php?page=presensi&&nimnik=<?php echo $data['nimnik'];?>" style="color: black;">Presensi</a>
+          <a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;</a>
+          <a href="index.php?page=lpresensi&&nimnik=<?php echo $data['nimnik'];?>&&idkelas=<?php echo $data4['idkelas'];?>" style="color: black;">Presensi Kelas</a>
+          <a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;</a>
+          <strong>Face Recognition</strong>
+        </div>
       </div>
     </div>
+
     <div class="container" style="padding-bottom: 10px; padding-top: 10px; background: white;">
         <!-- <input type="hidden" name="nim" class="form-control" readonly value="<?php echo $hasill['idjadwal'] ?>"> -->
         
@@ -39,12 +58,12 @@
                     <div id="results">Your captured image will appear here...</div>
                 </div>
                 <div class="col-md-12 text-center">
-                    <br/>
-                    
-                        <input type="hidden" name="res" id="val">
-                        <button type= "button" class="btn btn-success" id="process">Process</button>
-                        
-                   
+                  <input type="hidden" name="res" id="val">
+                  <button type= "button" class="btn btn-success" id="process">Process</button>
+                </div>
+                <div class="col-md-6" style="margin-top: 20px; margin-bottom: 20px;">
+                  <input type="file" class="custom-file-input" id="customFile" name="filename">
+                  <label class="custom-file-label" for="customFile">Choose file</label>
                 </div>
             </div>
         </form>

@@ -1,128 +1,147 @@
-<!-- isi -->
 <div class="container">
-  <div class="module-head">
-      <h5><large>Presensi Kelas</large></h5><br>
-  </div>
-  <?php
-    $idkelas = $_GET['idkelas'];
-    $sql4 = "SELECT * FROM akademik.ak_kelas WHERE ak_kelas.idkelas='$idkelas'";
-    $hasil4 = pg_query($sql4);
-    $data4 = pg_fetch_array($hasil4);
-  ?>
-  <div class="sidenav">
-    <a href="index.php?page=pkelas&&nimnik=<?php echo $data['nimnik'];?>&&idkelas=<?php echo $data4['idkelas'];?>">Peserta Kelas</a>
-    <a href="#" style="color: blue;">Presensi Kelas</a>  
-  </div>
-</div>
-
-<div class="main">
-  <?php
-    $idkelas = $_GET['idkelas'];
-
-    $sql2    = "SELECT * FROM akademik.ak_kelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_kelas.idkelas='$idkelas'";
-    $hasil2   = pg_query($sql2);
-    $data2    = pg_fetch_array($hasil2);
-  ?>
-  
-  <form style="padding-top: 20px;">
-    <h5 class="sidenav-up">
-      <div>
-        <label>Mata Kuliah</label>
-        <label>:</label>
-        <label><?php echo $data2['namamk'];?></label>
-      </div>
-      <div>
-        <label>Nama Kelas</label>
-        <label>:</label>
-        <label><?php echo $data2['namakelas'];?></label>
-      </div>
-    </h5>
-  </form><br>
-  <div class="table-responsive">
-    
-    <!-- Menampilkan Jadwal Kuliah Berdasarkan tanggal sekarang -->
-    <!-- <i class="fa fa-clock-o" style="padding-bottom: 10px;"> Jadwal Kelas</i> -->
-    <table class="table table-bordered table-sm table-stripped">
-      <thead class="thead-dark">
-        <tr align="center" style="font-size: 18px;">
-          <th>No</th>
-          <th>Tanggal</th>
-          <th>Waktu</th>
-          <th>Ruangan</th>
-          <th>Hadir</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-          include "../config/koneksi.php";
-          $no_urut = 0;
-          
-          $idkelas = $_GET['idkelas'];
-
-          $sql1    = "SELECT * FROM akademik.ak_perkuliahan INNER JOIN akademik.ak_kelas ON ak_perkuliahan.idkelas = ak_kelas.idkelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_kelas.idkelas='$idkelas'";
-          $hasil1   = pg_query($sql1);
-
-          if(pg_num_rows($hasil1) == 0){
-            echo '<tr><td colspan="7" align="center">Tidak Ada Perkuliahan Hari Ini</td></tr>';
-          }
-          else{
-
-            $no = 1;
-            while($data1=pg_fetch_array($hasil1))
-          {  
-              $no_urut++;
-              // $sql1 = "SELECT * FROM public.user";
-              // $data1 = pg_exec($sql1);
-              echo '<tr align="center">';
-                echo '<td><font size="2px">'.$no_urut.'</font></td>';
-                
-                echo '<td><font size="2px">'.$data1['tgljadwal'].'</font></td>';
-                echo '<td><font size="2px">'.$data1['waktumulai'].' s.d. '.$data1['waktuselesai'].'</font></td>';
-                echo '<td><font size="2px">'.$data1['idruang'].'</font></td>';
-              ?>
-                <td>
-                  <font size="2px">
-                    <?php
-                      $tgl    = $data1['tgljadwal'];
-                      $jadwal = $data1['idjadwal'];
-                      // var_dump($jadwal);
-                      // var_dump($tgl);
-
-                      // $queryy = "SELECT * FROM akademik.facerec";
-                      // $sqll = pg_query($queryy);
-                      // $dataa = pg_fetch_array($sqll);
-
-                      // $idkelas   = $dataa['idkelas'];
-                      // var_dump($idkelas);
-                      // var_dump($tgl);
-
-                      $sum    = "SELECT COUNT(nim) as jml FROM akademik.ak_absensimhs WHERE idjadwal='$jadwal'";
-                      $query  = pg_query($sum);
-                      $result = pg_fetch_assoc($query);
-
-                      $total  = $result['jml'];
-                      // var_dump($total);
-                      echo $total;
-                    ?>
-                  </font>
-                </td>
-                <!-- echo '<td><font size="2px"></font></td>'; -->
-              <?php
-                echo '<td>
-                        <a href="index.php?page=facerec&&nimnik='.$data['nimnik'].'&&idjadwal='.$data1['idjadwal'].'"><i class="fas fa-camera"></i></a>&nbsp;&nbsp;&nbsp;
-                        <a href="#" style="color: green;"><i class="fas fa-clipboard-list" data-toggle="modal" data-target="#myModal"></i></a>
-                      </td>';
-              echo '</tr>';
-              $no++;
-            }
-          }
-        ?>
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="col-sm-6">
+      <h4>Presensi Kelas</h4>
+    </div>
+    <div class="col-sm-6" align="right" style="font-size: 12px;">
+      <i class="fas fa-table"></i> 
+      <a href="index.php?page=index&&nimnik=<?php echo $data['nimnik'];?>" style="color: black;">Home</a>
+      <a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;</a>
+      <a href="index.php?page=presensi&&nimnik=<?php echo $data['nimnik'];?>" style="color: black;">Presensi</a>
+      <a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;</a>
+      <strong>Presensi Kelas</strong>
+    </div>
   </div>
 </div>
 
+<div class="container" style="margin-top:20px; background-color: white;">
+  <div class="row">
+    <div class="col-sm-2 sidenav" style="border-right: thin solid #e6f2ff;">
+      <?php
+        $idkelas = $_GET['idkelas'];
+        $sql4 = "SELECT * FROM akademik.ak_kelas WHERE ak_kelas.idkelas='$idkelas'";
+        $hasil4 = pg_query($sql4);
+        $data4 = pg_fetch_array($hasil4);
+      ?>
+      <ul class="nav flex-column" style="padding-top: 20px;">
+        <li class="nav-item-side">
+          <a class="nav-link" href="index.php?page=pkelas&&nimnik=<?php echo $data['nimnik'];?>&&idkelas=<?php echo $data4['idkelas'];?>">Peserta Kelas</a>
+        </li>
+        <li class="nav-item-side">
+          <a class="nav-link" href="#" style="color: #0099cc;">Presensi Kelas</a>
+        </li>
+      </ul>
+      <hr class="d-sm-none">
+    </div>
+
+    <div class="col-sm-10" style="background-color: white;">
+      <?php
+        $idkelas = $_GET['idkelas'];
+
+        $sql2    = "SELECT * FROM akademik.ak_kelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_kelas.idkelas='$idkelas'";
+        $hasil2   = pg_query($sql2);
+        $data2    = pg_fetch_array($hasil2);
+      ?>
+      
+      <form style="padding: 20px;">
+        <h5 class="sidenav-up">
+          <div>
+            <label>Mata Kuliah</label>
+            <label>:</label>
+            <label><?php echo $data2['namamk'];?></label>
+          </div>
+          <div>
+            <label>Nama Kelas</label>
+            <label>:</label>
+            <label><?php echo $data2['namakelas'];?></label>
+          </div>
+        </h5>
+      </form>
+      <div class="table-responsive">
+        
+        <!-- Menampilkan Jadwal Kuliah Berdasarkan tanggal sekarang -->
+        <!-- <i class="fa fa-clock-o" style="padding-bottom: 10px;"> Jadwal Kelas</i> -->
+        <table class="table table-bordered table-sm table-stripped">
+          <thead class="thead-dark">
+            <tr align="center" style="font-size: 15px;">
+              <th>No</th>
+              <th>Tanggal</th>
+              <th>Waktu</th>
+              <th>Ruangan</th>
+              <th>Hadir</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+              include "../config/koneksi.php";
+              $no_urut = 0;
+              
+              $idkelas = $_GET['idkelas'];
+
+              $sql1    = "SELECT * FROM akademik.ak_perkuliahan INNER JOIN akademik.ak_kelas ON ak_perkuliahan.idkelas = ak_kelas.idkelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_kelas.idkelas='$idkelas'";
+              $hasil1   = pg_query($sql1);
+
+              if(pg_num_rows($hasil1) == 0){
+                echo '<tr><td colspan="7" align="center">Tidak Ada Perkuliahan Hari Ini</td></tr>';
+              }
+              else{
+
+                $no = 1;
+                while($data1=pg_fetch_array($hasil1))
+              {  
+                  $no_urut++;
+                  // $sql1 = "SELECT * FROM public.user";
+                  // $data1 = pg_exec($sql1);
+                  echo '<tr align="center">';
+                    echo '<td><font size="2px">'.$no_urut.'</font></td>';
+                    
+                    echo '<td><font size="2px">'.$data1['tgljadwal'].'</font></td>';
+                    echo '<td><font size="2px">'.$data1['waktumulai'].' s.d. '.$data1['waktuselesai'].'</font></td>';
+                    echo '<td><font size="2px">'.$data1['idruang'].'</font></td>';
+                  ?>
+                    <td>
+                      <font size="2px">
+                        <?php
+                          $tgl    = $data1['tgljadwal'];
+                          $jadwal = $data1['idjadwal'];
+                          // var_dump($jadwal);
+                          // var_dump($tgl);
+
+                          // $queryy = "SELECT * FROM akademik.facerec";
+                          // $sqll = pg_query($queryy);
+                          // $dataa = pg_fetch_array($sqll);
+
+                          // $idkelas   = $dataa['idkelas'];
+                          // var_dump($idkelas);
+                          // var_dump($tgl);
+
+                          $sum    = "SELECT COUNT(nim) as jml FROM akademik.ak_absensimhs WHERE idjadwal='$jadwal'";
+                          $query  = pg_query($sum);
+                          $result = pg_fetch_assoc($query);
+
+                          $total  = $result['jml'];
+                          // var_dump($total);
+                          echo $total;
+                        ?>
+                      </font>
+                    </td>
+                    <!-- echo '<td><font size="2px"></font></td>'; -->
+                  <?php
+                    echo '<td>
+                            <a href="index.php?page=facerec&&nimnik='.$data['nimnik'].'&&idkelas='.$data1['idkelas'].'&&idjadwal='.$data1['idjadwal'].'"><i class="fas fa-camera"></i></a>&nbsp;&nbsp;&nbsp;
+                            <a href="#" style="color: green;"><i class="fas fa-clipboard-list" data-toggle="modal" data-target="#myModal"></i></a>
+                          </td>';
+                  echo '</tr>';
+                  $no++;
+                }
+              }
+            ?>
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>
 
 <!-- The Modal | Modal Tambah Data-->
   <div class="modal" id="myModal" data-spy="scroll" data-target="#myScrollspy" data-offset="1">
@@ -132,7 +151,7 @@
         
           <!-- Modal Header -->
           <div class="modal-header">
-            <h4 class="modal-title">Presensi Peserta Kelas</h4>
+            <h5 class="modal-title">Presensi Peserta Kelas</h5>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
           
@@ -146,13 +165,27 @@
               $data3 = pg_fetch_array($hasil3);
               
             ?>
-            <a href="index.php?page=facerec&&nimnik=<?php echo $data['nimnik'];?>&&idjadwal=<?php echo $data3['idjadwal'];?>">
+            <!-- <a href="index.php?page=facerec&&nimnik=<?php echo $data['nimnik'];?>&&idjadwal=<?php echo $data3['idjadwal'];?>">
               <button type="button" class="btn btn-primary">Take Photo</button>
-            </a>
+            </a> -->
             
           </div>
           
           <div class="container" class="modal-body">
+            <form>
+              <h6 class="sidenav-up">
+                <div>
+                  <label>Mata Kuliah</label>
+                  <label>:</label>
+                  <label><?php echo $data2['namamk'];?></label>
+                </div>
+                <div>
+                  <label>Nama Kelas</label>
+                  <label>:</label>
+                  <label><?php echo $data2['namakelas'];?></label>
+                </div>
+              </h6>
+            </form><hr>
               <table class="table table-bordered table-sm" id="fixed-header">
                 <thead class="thead-dark" id="myScrollspy">
                   <tr align="center" style="font-size: 18px;">
@@ -164,7 +197,14 @@
                 <tbody>
                   <?php
                     include "../config/koneksi.php";
+                    $sql9    = "SELECT * FROM akademik.ak_perkuliahan INNER JOIN akademik.ak_kelas ON ak_perkuliahan.idkelas = ak_kelas.idkelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_kelas.idkelas='$idkelas'";
+                    $hasil9   = pg_query($sql1);
+                    $data9  = pg_fetch_array($hasil9);
                     $no_urut = 0;
+                    $jadwal = $data9['idjadwal'];
+                    $sqll   = "SELECT * FROM akademik.ak_absensimhs WHERE idjadwal = '$jadwal'";
+                    $hasill = pg_exec($sqll);
+                    $dataa  = pg_fetch_array($hasill);
 
                     $sql = "SELECT * FROM akademik.ak_krs INNER JOIN akademik.ak_kelas ON ak_krs.idkelas = ak_kelas.idkelas WHERE ak_kelas.idkelas='$idkelas'";
                     // $sql = "SELECT * FROM public.ak_perkuliahan";
@@ -174,7 +214,6 @@
                       echo '<tr><td colspan="7" align="center">Tidak Ada Mahasiswa</td></tr>';
                     }
                     else{
-
                       $no = 1;
                       while($data=pg_fetch_array($hasil)){
                         $no_urut++;
@@ -184,12 +223,28 @@
                           echo '<td><font size="2px">'.$no_urut.'</font></td>';
                           
                           echo '<td><font size="2px">'.$data['nim'].'</font></td>';
+                        
                           
-                          echo '<td><input type="text" class="form-control" id="nama" name="nama" style="width:100px;"></td>';
+                  ?>
+                    
+                          <!-- <td><input type="text" class="form-control" id="nama" name="nama" style="width:100px;"></td> -->
+                          <td>
+                              <select name="statushadir" class="custom-select col-sm-5" style="font-size: 12px;">
+                                <option value="A" <?php if($dataa['statushadir'] == 'A'){ echo 'selected'; } ?>>Alfa</option>
+                                <option value="H" <?php if($dataa['statushadir'] == 'H'){ echo 'selected'; } ?>>Hadir</option>
+                                <option value="I" <?php if($dataa['statushadir'] == 'I'){ echo 'selected'; } ?>>Izin</option>
+                                <option value="S" <?php if($dataa['statushadir'] == 'S'){ echo 'selected'; } ?>>Sakit</option>
+                              </select>
+                          </td>                          
+                        
+                         <?php
+                                }
+                            ?> 
+                  <?php
                         echo '</tr>';
                         $no++;
                       }
-                    }
+                    // }
                   ?>
                 </tbody>
               </table>
@@ -197,11 +252,10 @@
           
           <!-- Modal footer -->
           <div class="modal-footer">
-            <a href="#"><button type="submit" class="btn btn-primary">Simpan</button></a>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <a href="#"><button type="submit" class="btn btn-success btn-sm"><i class='fas fa-save'></i> Simpan</button></a>
+            <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
           </div>
         </div>
       </form>
     </div>
   </div>
-
