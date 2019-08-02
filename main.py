@@ -78,25 +78,25 @@ def facerec():
             date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
             timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
             tt = str(Id)
-            cursor.execute("INSERT INTO akademik.ak_absensimhs(nim,idjadwal) SELECT ak_krs.nim, ak_perkuliahan.idjadwal FROM akademik.ak_krs LEFT JOIN akademik.ak_perkuliahan ON ak_krs.idkelas = ak_perkuliahan.idkelas WHERE ak_perkuliahan.idjadwal = %s;",[getidjadwal])
+            # cursor.execute("INSERT INTO akademik.ak_absensimhs(nim,idjadwal) SELECT ak_krs.nim, ak_perkuliahan.idjadwal FROM akademik.ak_krs LEFT JOIN akademik.ak_perkuliahan ON ak_krs.idkelas = ak_perkuliahan.idkelas WHERE ak_perkuliahan.idjadwal = %d;",[getidjadwal])
+            # if cursor.rowcount < 1:
+            cursor.execute("SELECT * FROM akademik.facerec WHERE nim = %s AND idjadwal = %s;",[Id,getidjadwal])
             if cursor.rowcount < 1:
-                cursor.execute("SELECT * FROM akademik.facerec WHERE nim = %s AND idjadwal = %s;",[Id,getidjadwal])
-                if cursor.rowcount < 1:
-                    sql = "INSERT INTO akademik.facerec (nim, tgl, waktu, idjadwal) VALUES (%s,%s,%s,%s)"
-                    record = (Id,date,timeStamp,getidjadwal)
-                    cursor.execute(sql,record)
-                    connection.commit()
-                    count = cursor.rowcount
+                sql = "INSERT INTO akademik.facerec (nim, tgl, waktu, idjadwal) VALUES (%s,%s,%s,%s)"
+                record = (Id,date,timeStamp,getidjadwal)
+                cursor.execute(sql,record)
+                connection.commit()
+                count = cursor.rowcount
 
-                cursor.execute("SELECT * FROM akademik.ak_absensimhs WHERE nim = %s AND idjadwal = %s;",[Id,getidjadwal])
-                if cursor.rowcount < 1:
-                    #insert absensi
-                    status = "H"
-                    sqlabsen = "INSERT INTO akademik.ak_absensimhs (nim, idjadwal, statushadir) VALUES (%s,%s,%s)"
-                    recordabsen = (Id,getidjadwal,status)
-                    cursor.execute(sqlabsen,recordabsen)
-                    connection.commit()
-                    count = cursor.rowcount
+            cursor.execute("SELECT * FROM akademik.ak_absensimhs WHERE nim = %s AND idjadwal = %s;",[Id,getidjadwal])
+            if cursor.rowcount < 1:
+                #insert absensi
+                status = "H"
+                sqlabsen = "INSERT INTO akademik.ak_absensimhs (nim, idjadwal, statushadir) VALUES (%s,%s,%s)"
+                recordabsen = (Id,getidjadwal,status)
+                cursor.execute(sqlabsen,recordabsen)
+                connection.commit()
+                count = cursor.rowcount
         else:
             Id = 'Unknown'
             tt = str(Id)

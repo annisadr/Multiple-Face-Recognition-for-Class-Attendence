@@ -200,13 +200,28 @@
                     $sql9    = "SELECT * FROM akademik.ak_perkuliahan INNER JOIN akademik.ak_kelas ON ak_perkuliahan.idkelas = ak_kelas.idkelas INNER JOIN akademik.ak_matakuliah ON ak_kelas.idmk = ak_matakuliah.idmk WHERE ak_kelas.idkelas='$idkelas'";
                     $hasil9   = pg_query($sql1);
                     $data9  = pg_fetch_array($hasil9);
-                    $no_urut = 0;
                     $jadwal = $data9['idjadwal'];
-                    $sqll   = "SELECT * FROM akademik.ak_absensimhs WHERE idjadwal = '$jadwal'";
-                    $hasill = pg_exec($sqll);
-                    $dataa  = pg_fetch_array($hasill);
+                    $no_urut = 0;
+                    
+                    $sql = "
+                            SELECT a.* , 
+                            CASE
+                                WHEN b.statushadir = 'A' THEN 'Alfa'
+                                WHEN b.statushadir = 'I' THEN 'Izin'
+                                WHEN b.statushadir = 'H' THEN 'Hadir'
+                                WHEN b.statushadir = 'S' THEN 'Sakit'
+                                ELSE 'Alfa'
+                            END as status 
+                            FROM akademik.ak_krs a 
+                            LEFT OUTER JOIN (
+                              SELECT nim, statushadir
+                              FROM akademik.ak_absensimhs
+                              WHERE idjadwal = ".$jadwal."
+                                  )b ON a.nim = b.nim
+                            WHERE idkelas='".$idkelas."'
 
-                    $sql = "SELECT * FROM akademik.ak_krs INNER JOIN akademik.ak_kelas ON ak_krs.idkelas = ak_kelas.idkelas WHERE ak_kelas.idkelas='$idkelas'";
+                    ";
+                    var_dump($sql); die();
                     // $sql = "SELECT * FROM public.ak_perkuliahan";
                     $hasil = pg_exec($sql);
 
@@ -230,19 +245,20 @@
                           <!-- <td><input type="text" class="form-control" id="nama" name="nama" style="width:100px;"></td> -->
                           <td>
                               <select name="statushadir" class="custom-select col-sm-5" style="font-size: 12px;">
-                                <option value="A" <?php if($dataa['statushadir'] == 'A'){ echo 'selected'; } ?>>Alfa</option>
-                                <option value="H" <?php if($dataa['statushadir'] == 'H'){ echo 'selected'; } ?>>Hadir</option>
-                                <option value="I" <?php if($dataa['statushadir'] == 'I'){ echo 'selected'; } ?>>Izin</option>
-                                <option value="S" <?php if($dataa['statushadir'] == 'S'){ echo 'selected'; } ?>>Sakit</option>
+                                <option value="A" <?php if($data['status'] == 'Alfa'){ echo 'selected'; } ?>>Alfa</option>
+                                <option value="H" <?php if($data['status'] == 'Hadir'){ echo 'selected'; } ?>>Hadir</option>
+                                <option value="I" <?php if($data['status'] == 'Izin'){ echo 'selected'; } ?>>Izin</option>
+                                <option value="S" <?php if($data['status'] == 'Sakit'){ echo 'selected'; } ?>>Sakit</option>
                               </select>
                           </td>                          
                         
                          <?php
                                 }
-                            ?> 
+                            ?>
                   <?php
                         echo '</tr>';
                         $no++;
+
                       }
                     // }
                   ?>
