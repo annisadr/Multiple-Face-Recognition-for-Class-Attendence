@@ -8,10 +8,29 @@
   $data1=pg_fetch_array($query);
 ?>
 <div class="container">
-  <div class="module-head">
-      <h5><large>Ambil Foto</large></h5><br>
+  <?php
+    $idkelas = $_GET['idkelas'];
+    $sql4 = "SELECT * FROM akademik.ak_kelas WHERE ak_kelas.idkelas='$idkelas'";
+    $hasil4 = pg_query($sql4);
+    $data4 = pg_fetch_array($hasil4);
+  ?>
+  <div class="row">
+    <div class="col-sm-6">
+      <h4>Ambil Foto</h4>
+    </div>
+    <div class="col-sm-6" align="right" style="font-size: 12px;">
+      <i class="fas fa-table"></i> 
+      <a href="index.php?page=index&&nimnik=<?php echo $data['nimnik'];?>" style="color: black;">Home</a>
+      <a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;</a>
+      <a href="index.php?page=presensi&&nimnik=<?php echo $data['nimnik'];?>" style="color: black;">Presensi</a>
+      <a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;</a>
+      <a href="index.php?page=pkelas&&nimnik=<?php echo $data['nimnik'];?>&&idkelas=<?php echo $data4['idkelas'];?>" style="color: black;">Peserta Kelas</a>
+      <a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;</a>
+      <strong>Ambil Foto Mahasiswa</strong>
+    </div>
   </div>
 </div>
+
 <div class="container" style="background-color: white; padding-bottom: 50px;">
   <form id="takephoto" method="POST">
     <input type="hidden" name="nim" class="form-control" readonly value="<?php echo $data1['nim'] ?>">

@@ -1,3 +1,5 @@
+
+
 <?php
 
     {
@@ -12,6 +14,13 @@
   <title>Universitas Darma Persada - Presensi Kelas</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <script type="text/javascript" src="../assets/jquery-3.2.1.min.js"></script> -->
+
+  <!-- Google icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Data Table -->
+  <!-- <link rel="stylesheet" href="../assets/dataTables/datatables.min.css"> -->
   
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -20,20 +29,34 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- icon -->
 
   <!-- jQuery library -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="../assets/jquery-3.4.1.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> -->
 
   <!-- Popper JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
 
   <!-- Latest compiled JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="../assets/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
   <!-- <script src="bootstrap-4.3.1-dist/js/bootstrap.min.js"></script> --> <!-- ini di download // bs 4 js-->
 
   <!-- gambar logout -->
   <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
 
+  <!-- logo di tab -->
+  <link href="../gambar/logo.png" rel="icon" type="image/x-icon" />
+
   <!-- css -->
   <link rel="stylesheet" type="text/css" href="../css/main.css">
+
+  <!-- <script type="text/javascript" src="../assets/dataTables/jQuery-3.3.1/jquery-3.3.1.js"></script> -->
+  <!-- <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"> -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body style="background-color: #f2f2f2;">
@@ -80,27 +103,24 @@
         </li>
 
         <li class="nav-item">
-          <a class="navbar-brand" href="index.php?page=matkul" style="color: black; font-size: 14px;">Mata Kuliah</a>
+          <a class="navbar-brand" href="index.php?page=matkul" style="color: black; font-size: 14px;">Jadwal Kuliah</a>
         </li>
 
         <li class="nav-item">
-          <a class="navbar-brand" href="index.php?page=muser" style="color: black; font-size: 14px;">Manajemen User</a>
+          <a class="navbar-brand" href="index.php?page=list-mhs" style="color: black; font-size: 14px;">Mahasiswa</a>
         </li>
+
+        <li class="nav-item">
+          <a class="navbar-brand" href="index.php?page=rfoto" style="color: black; font-size: 14px;">Riwayat Foto</a>
+        </li>
+
+        <!-- <li class="nav-item">
+          <a class="navbar-brand" href="index.php?page=muser" style="color: black; font-size: 14px;">Manajemen User</a>
+        </li> -->
       </ul>
     </div>
   </div>
 </nav>
-
-<!-- Take Photo -->
-<!-- <div class="booth">
-  <center><video id="video" width="400" height="300"></video></center>
-  <a href="#" id="capture" class="booth-capture-button">Take photo</a>
-  <canvas id="canvas" width="400" height="300"></canvas>
-</div>
-
-<script src="js/photo.js"></script> -->
-
-
 
 
 
@@ -111,15 +131,41 @@
     <?php
       if ($page=='index')
       include ('dashboard.php');
-      if ($page=='matkul')
+      elseif ($page=='matkul')
       include ('matkul.php');
-      if ($page=='muser')
+      elseif ($page=='muser')
       include ('manajemen-user.php');
+      elseif ($page=='list-mhs')
+      include ('list-mahasiswa.php');
+      elseif ($page=='takephoto')
+      include ('takephoto-pkelas.php');
+      elseif ($page=='tkelas')
+      include ('tambah-kelas.php');
+      elseif ($page=='kelas')
+      include ('jadwal-kelas.php');
+      elseif ($page=='rfoto')
+      include ('riwayat-foto.php');
+      elseif ($page=='tjadwal')
+      include ('tambah-jadwal.php');
     ?>
   </div>
 
 </div>
 
+<!-- <script src="../assets/dataTables/jQuery-3.3.1/jquery-3.3.1.min.js"></script>
+<script src="../assets/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+<script src="../assets/dataTables/datatables.min.js"></script> -->
+<script type="text/javascript" src="../assets/dataTables/jQuery-3.3.1/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#example').DataTable();
+  } );
+</script>
 
 </body>
 </html>

@@ -61,12 +61,14 @@ def facerec():
     images_path = "dosen/"+str(request.form['res']);
     # foto = str(request.form['res']);
     # ces = "dosen/uploadtmp/190706104734.jpeg";
+
     recognizer = cv2.face.LBPHFaceRecognizer_create()
     recognizer.read('trainer/trainer.yml')
     faceCascade = cv2.CascadeClassifier('assets/cascades/data/haarcascade_frontalface_default.xml');
 
     img = cv2.imread(images_path) 
     font = cv2.FONT_HERSHEY_SIMPLEX
+    nim = "";
     
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     faces =  faceCascade.detectMultiScale(gray, 1.3,5)
@@ -100,20 +102,83 @@ def facerec():
         else:
             Id = 'Unknown'
             tt = str(Id)
+
+        
+        cursor.execute("SELECT namamhs FROM akademik.ak_mahasiswa WHERE nim = %s;",[Id])
+        record = cursor.fetchall()
+        for row in record:
+            nama = str(row[0])
+        tt = str(Id)
+        nim += tt
+        cv2.putText(img, str(nama+tt), (x,y+h), font, 1, (255,255,255), 1)
+    cv2.imshow('img',img)
+    cv2.waitKey(5000)
+
+    cv2.destroyAllWindows()
+
+    response = {
+        'nim' : nim
+    }
+
+    return jsonify({
+        'data' : response
+    })
+    # return "success running"
+
+#face recognition video
+@app.route('/facerecvid', methods = ['POST'])
+def facerecvid():
+    recognizer = cv2.face.LBPHFaceRecognizer_create()
+    recognizer.read('../trainer/trainer.yml')
+    faceCascade = cv2.CascadeClassifier('../assets/cascades/data/haarcascade_frontalface_default.xml');
+    df = pd.read_csv("../StudentDetails/StudentDetails.csv")
+
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    cam = cv2.VideoCapture(0)
+    ret, img = cam.read()
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    faces = faceCascade.detectMultiScale(gray, 1.3,5)
+
+    for(x,y,w,h) in faces:
+        cv2.rectangle(img, (x-20,y-20), (x+w+20,y+h+20), (0,255,0), 2)
+        Id, conf = recognizer.predict(gray[y:y+h,x:x+w])
+        if(Id > 50) :
+            ts = time.time()      
+            date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
+            timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
+            
+            tt = str(Id)
+            # cursor.execute("SELECT * FROM akademik.facerec WHERE nim = %s AND idjadwal = %s;",["2015230014","262337"])
+            # if cursor.rowcount<1:
+            sql = "INSERT INTO akademik.facerec (nim, tgl, waktu, idjadwal) VALUES (%s,%s,%s,%s)"
+            record = (Id,date,timeStamp,"262337")
+            cursor.execute(sql,record)
+            connection.commit()
+            count = cursor.rowcount
+            
+        else:
+            Id = 'Unknown'
+            tt = str(Id)
+        if(conf > 75):
+            noOfFile = len(os.listdir("ImagesUnknown"))+1
+            cv2.imwrite("ImagesUnknown/Image"+str(noOfFile) + ".jpg", img[y:y+h,x:x+w])
         tt = str(Id)
         cv2.putText(img, str(tt), (x,y+h), font, 1, (255,255,255), 1)
     cv2.imshow('img',img)
     cv2.waitKey(10000)
+    ts = time.time()
+    date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
+    timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
+    Hour,Minute,Second=timeStamp.split(":")
 
     cv2.destroyAllWindows()
     return "success running"
-    
     
 #take photo mahasiswa
 @app.route('/getpict', methods = ['POST'])
 def getpict():
     getnim = str(request.form['nim']);
-    vid_cam = cv2.VideoCapture(1)
+    vid_cam = cv2.VideoCapture(0)
     face_detector = cv2.CascadeClassifier('assets/cascades/data/haarcascade_frontalface_default.xml')
     face_id = getnim 
     count = 0

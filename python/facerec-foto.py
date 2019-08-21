@@ -67,6 +67,14 @@ while (loop<Nloop):
 	cv2.imshow('img',img)
 	if cv2.waitKey(10) & 0xFF == ord('q'):
 		break
+	if 0xFF == ord('c'):
+		cursor.execute("SELECT * FROM akademik.facerec WHERE nim = %s AND idjadwal = %s;",[Id,'262337'])
+        if cursor.rowcount < 1:
+            sql = "INSERT INTO akademik.facerec (nim, tgl, waktu, idjadwal) VALUES (%s,%s,%s,%s)"
+            record = (Id,date,timeStamp,'262337')
+            cursor.execute(sql,record)
+            connection.commit()
+            count = cursor.rowcount	
 ts = time.time()
 date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
 timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
